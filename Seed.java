@@ -1,31 +1,47 @@
-import java.net.URL;
 import java.util.ArrayList;
 
 public class Seed {
-    private ArrayList<URL> urls = new ArrayList<>();
-    private ArrayList<String> words = new ArrayList<>();
+    private ArrayList<URLartificial> urls = new ArrayList<>();
 
-    public void setUrlsList(ArrayList<URL> urls) {
+
+
+    private ArrayList<SearchWord> words = new ArrayList<>();
+
+    public void setUrlsList(ArrayList<URLartificial> urls) {
         this.urls = urls;
     }
 
-    public ArrayList<URL> getUrls() {
-        return urls;
+    public ArrayList<URLartificial> getUrls() {
+        return this.urls;
     }
 
-    public void setUrls(URL urls) {
+    public void setUrls(URLartificial urls) {
         this.urls.add(urls);
     }
 
-    public ArrayList<String> getWords() {
+    public ArrayList<SearchWord> getWords() {
         return words;
     }
 
     public void setWords(String word) {
-        this.words.add(word);
+        SearchWord temp = null;
+        temp.setWord(word);
+        this.words.add(temp);
     }
 
-    public void setWordsList(ArrayList<String> words) {
+    public void setWordsList(ArrayList<SearchWord> words) {
         this.words = words;
     }
+
+    public boolean has(String url){
+        for (URLartificial s : urls){
+            //System.out.println(s.getDeepness() + " " + s.getUrl());
+            if(s.getUrl().equals(url)) return true;
+        }
+        //System.out.println("-----------------");
+        return false;
+
+    }
 }
+
+

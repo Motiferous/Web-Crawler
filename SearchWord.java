@@ -1,11 +1,13 @@
 public class SearchWord {
-    public SearchWord() {
-        this.counter = counter;
-        this.word = word;
-    }
+
 
     private int counter = 0;
     private String word;
+
+    public SearchWord(int counter, String word) {
+        this.counter = counter;
+        this.word = word;
+    }
 
     public int getCounter() {
         return counter;
