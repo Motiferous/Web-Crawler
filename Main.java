@@ -9,23 +9,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
+    static HashMap<String, String> config = new HashMap<String, String>();
 
     public static void main(String[] args) {
 
 
         ArrayList<Seed> everyInput = new ArrayList<>();
 
+        GetConfig();
+
+
         try {
             GetInput(everyInput);
         } catch (FileNotFoundException | MalformedURLException e) {
             e.printStackTrace();
         }
-        //System.out.println(everyInput.get(0).getWords());
 
         try {
             GetResults(everyInput);
@@ -38,30 +39,47 @@ public class Main {
 
     }
 
-    public static void Output(ArrayList<Seed> everyInput) {
+    private static void GetConfig() {
+        File input = new File("config.txt");
+        Scanner myReader = null;
         try {
-            File output = new File("output.txt");
+            myReader = new Scanner(input);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        while (myReader.hasNextLine()) {
+            String data = myReader.nextLine();
+
+            String[] dataParts = data.split("=");
+            config.put(dataParts[0], dataParts[1]);
+        }
+    }
+
+    public static void Output(ArrayList<Seed> everyInput) {
+        final String FILE_OUTPUT = config.get("OUTPUT_NAME/PATH");
+        final String SEPARATOR = config.get("OUTPUT_SEPARATED_BY");
+
+        try {
+            File output = new File(FILE_OUTPUT);
             output.createNewFile();
             PrintWriter writer = new PrintWriter(output);
 
 
-
-            for (Seed s : everyInput){
-                    for(URLartificial u : s.getUrls()){
-                        if(u.getDeepness() == 1) {
-                            writer.print(u.getUrl() + ",");
-                        }
-                        else break;
-                    }
-                    for (SearchWord w : s.getWords()){
-                        if (w.equals(s.getWords().get(s.getWords().size() - 1))){
-                            writer.print(w.getCounter());
-                        }
-                        else  writer.print(w.getCounter() + ",");
-                    }
-                System.out.println("");
+            for (Seed s : everyInput) {
+                for (URLartificial u : s.getUrls()) {
+                    if (u.getDeepness() == 1) {
+                        writer.print(u.getUrl() + SEPARATOR);
+                    } else break;
                 }
+                for (SearchWord w : s.getWords()) {
+                    writer.print(w.getCounter() + SEPARATOR);
+                }
+                writer.println(s.getTotalCount());
+            }
             writer.close();
+
 
 
         } catch (IOException e) {
@@ -69,11 +87,13 @@ public class Main {
         }
 
 
-
     }
 
     public static void GetInput(ArrayList<Seed> array) throws FileNotFoundException, MalformedURLException {
-        File input = new File("input.txt");
+        final String FILE_INPUT = config.get("INPUT_NAME/PATH");
+        final String SEPARATOR = config.get("INPUT_SEPARATED_BY");
+
+        File input = new File(FILE_INPUT);
         Scanner myReader = new Scanner(input);
 
 
@@ -81,15 +101,16 @@ public class Main {
             String data = myReader.nextLine();
             Seed anotherone = new Seed();
 
-            ArrayList<String> seperatedUrl = new ArrayList<>(List.of(data.split("\\s*,\\s*")));
+            ArrayList<String> separatedUrl = new ArrayList<>(List.of(data.split(SEPARATOR)));
 
-            for (String s : seperatedUrl) {
+            for (String s : separatedUrl) {
                 URLartificial temp = new URLartificial(1, s);
                 anotherone.getUrls().add(temp);
             }
+
             data = myReader.nextLine();
-            ArrayList<String> seperatedWords = new ArrayList<>(List.of(data.split("\\s*,\\s*")));
-            for (String s : seperatedWords) {
+            ArrayList<String> separatedWords = new ArrayList<>(List.of(data.split(SEPARATOR)));
+            for (String s : separatedWords) {
                 SearchWord tempW = new SearchWord(0, s);
                 anotherone.getWords().add(tempW);
             }
@@ -102,35 +123,34 @@ public class Main {
     }
 
     public static void GetResults(ArrayList<Seed> input) throws IOException {
-        for (int i = 0; i < input.size(); i++) {
-            for (int i1 = 0; i1 < input.get(i).getUrls().size() && i1 < 100 && input.get(i).getUrls().get(i1).getDeepness() <= 8; i1++) {
-                System.out.println(i1);
-                Document document;
-                Document text;
-                System.out.println(input.get(i).getUrls().get(i1).getDeepness() + " " + input.get(i).getUrls().get(i1).getUrl());
 
+        final int MAX_LINKS = Integer.parseInt(config.get("MAX_LINKS"));
+        final int MAX_DEEPNESS = Integer.parseInt(config.get("MAX_DEPTH"));
+        for (int i = 0; i < input.size(); i++) {
+            for (int i1 = 0; i1 < input.get(i).getUrls().size() && i1 < MAX_LINKS && input.get(i).getUrls().get(i1).getDeepness() <= MAX_DEEPNESS; i1++) {
+                Document document;
+                URLartificial current = input.get(i).getUrls().get(i1);
                 try {
-                    document = Jsoup.connect(input.get(i).getUrls().get(i1).getUrl()).get();
+                    document = Jsoup.connect(current.getUrl()).get();
                 } catch (Exception e) {
                     continue;
                 }
-                text = Jsoup.parse(String.valueOf(document));
-                Matches(text, input, i);
-                if(input.get(i).getUrls().size() < 10000) {
+                document = Jsoup.parse(String.valueOf(document));
+                Matches(document, input, i);
+                if (input.get(i).getUrls().size() < MAX_LINKS) {
                     Elements links = document.select("a[href]");
                     for (Element link : links) {
                         if (!input.get(i).has(link.attr("abs:href"))) {
 
-                            URLartificial anothtemp = new URLartificial(input.get(i).getUrls().get(i1).getDeepness() + 1, link.attr("abs:href"));
+                            URLartificial anothtemp = new URLartificial(current.getDeepness() + 1, link.attr("abs:href"));
                             input.get(i).setUrls(anothtemp);
 
                         }
-                        //System.out.println(anothtemp.getUrl());
                     }
                 }
-                // System.out.println(input.get(i).getUrls().size() );
 
             }
+            input.get(i).SumUp();
         }
 
     }
@@ -140,13 +160,6 @@ public class Main {
             s.setCounter(s.getCounter() + StringUtils.countMatches(text.text(), s.getWord()));
 
         }
-       // System.out.println(text.text());
-      //  System.out.println("---------------------------------------------");
-
-
-        //System.out.println(        input.get(index).getWords().get(0).getCounter());
-
-        //System.out.println(input.get(index).getWords().get(3).getCounter());
     }
 
 

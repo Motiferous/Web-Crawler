@@ -3,6 +3,12 @@ import java.util.ArrayList;
 public class Seed {
     private ArrayList<URLartificial> urls = new ArrayList<>();
 
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    private int totalCount = 0;
+
 
 
     private ArrayList<SearchWord> words = new ArrayList<>();
@@ -42,6 +48,12 @@ public class Seed {
         return false;
 
     }
+    public void SumUp(){
+        for(SearchWord word : words){
+            totalCount += word.getCounter();
+        }
+    }
+
 }
 
 
