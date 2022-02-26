@@ -60,6 +60,11 @@ public class Main {
     public static void Output(ArrayList<Seed> everyInput) {
         final String FILE_OUTPUT = config.get("OUTPUT_NAME/PATH");
         final String SEPARATOR = config.get("OUTPUT_SEPARATED_BY");
+        final String REPORT_FORM = config.get("REPORT_FORM");
+
+        if (REPORT_FORM.equals("top_10")){
+            Sort(everyInput);
+        }
 
         try {
             File output = new File(FILE_OUTPUT);
@@ -87,6 +92,19 @@ public class Main {
         }
 
 
+    }
+
+    private static void Sort(ArrayList<Seed> everyInput) {
+        for (int i = 0; i < everyInput.size() - 1; i++) {
+            int min = i;
+
+            for (int i1 = i + 1; i1 < everyInput.size(); i1++){
+                if(everyInput.get(i).getTotalCount() < everyInput.get(i1).getTotalCount())min = i1;
+            }
+            Collections.swap(everyInput, i, min);
+
+
+        }
     }
 
     public static void GetInput(ArrayList<Seed> array) throws FileNotFoundException, MalformedURLException {
