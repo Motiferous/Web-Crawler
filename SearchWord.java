@@ -1,7 +1,7 @@
 public class SearchWord {
 
 
-    private int counter = 0;
+    private int counter;
     private String word;
 
     public SearchWord(int counter, String word) {
