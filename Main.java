@@ -4,17 +4,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class Main {
     static HashMap<String, String> config = new HashMap<String, String>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
 
 
         ArrayList<Seed> everyInput = new ArrayList<>();
@@ -39,13 +37,21 @@ public class Main {
 
     }
 
-    private static void GetConfig() {
-        File input = new File("config.txt");
+    private static void GetConfig() throws URISyntaxException {
+
+        File input = MakeDir("config.txt");
+        System.out.printf(input.getPath());
+
         Scanner myReader = null;
         try {
             myReader = new Scanner(input);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            input = new File("config.txt");
+            try {
+                myReader = new Scanner(input);
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
         }
 
 
@@ -67,7 +73,7 @@ public class Main {
         }
 
         try {
-            File output = new File(FILE_OUTPUT);
+            File output = MakeDir(FILE_OUTPUT);
             output.createNewFile();
             PrintWriter writer = new PrintWriter(output);
 
@@ -87,7 +93,7 @@ public class Main {
 
 
 
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
 
@@ -111,7 +117,15 @@ public class Main {
         final String FILE_INPUT = config.get("INPUT_NAME/PATH");
         final String SEPARATOR = config.get("INPUT_SEPARATED_BY");
 
-        File input = new File(FILE_INPUT);
+
+        File input = null;
+        try {
+            input = MakeDir(FILE_INPUT);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        System.out.println(input.exists());
+
         Scanner myReader = new Scanner(input);
 
 
@@ -178,6 +192,15 @@ public class Main {
             s.setCounter(s.getCounter() + StringUtils.countMatches(text.text(), s.getWord()));
 
         }
+    }
+
+    public static File MakeDir(String file) throws URISyntaxException {
+        String temp = new File(Main.class.getProtectionDomain().getCodeSource().getLocation()
+                .toURI()).getPath();
+
+        temp = temp.substring(0, temp.lastIndexOf('/')) + "/" + file;
+        File input = new File(temp);
+        return input;
     }
 
 
