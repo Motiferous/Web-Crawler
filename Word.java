@@ -1,10 +1,10 @@
-public class SearchWord {
+public class Word {
 
 
     private int counter;
     private String word;
 
-    public SearchWord(int counter, String word) {
+    public Word(int counter, String word) {
         this.counter = counter;
         this.word = word;
     }
