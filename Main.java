@@ -17,7 +17,6 @@ public class Main {
 
         ArrayList<Link> dataForAnalysis = new ArrayList<>();
 
-        GetConfig();
 
 
 
@@ -66,7 +65,7 @@ public class Main {
     }
 
     public static void Output(ArrayList<Link> everyInput) {
-        final String FILE_OUTPUT = configValues.get("OUTPUT_NAME/PATH");
+        final String FILE_OUTPUT = configValues.get("OUTPUT_NAME");
         final String SEPARATOR = configValues.get("OUTPUT_SEPARATED_BY");
         final String REPORT_FORM = configValues.get("REPORT_FORM");
 
@@ -116,7 +115,7 @@ public class Main {
     }
 
     public static void GetInput(ArrayList<Link> dataForInput) throws FileNotFoundException, MalformedURLException {
-        final String FILE_INPUT = configValues.get("INPUT_NAME/PATH");
+        final String FILE_INPUT = configValues.get("INPUT_NAME");
         final String SEPARATOR = configValues.get("INPUT_SEPARATED_BY");
 
 
