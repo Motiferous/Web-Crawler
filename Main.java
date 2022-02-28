@@ -114,7 +114,8 @@ public class Main {
         }
     }
 
-    public static void GetInput(ArrayList<Link> dataForInput) throws FileNotFoundException, MalformedURLException {
+    public static void GetInput(ArrayList<Link> dataForInput) throws FileNotFoundException, MalformedURLException, URISyntaxException {
+        GetConfig();
         final String FILE_INPUT = configValues.get("INPUT_NAME");
         final String SEPARATOR = configValues.get("INPUT_SEPARATED_BY");
 
@@ -196,11 +197,15 @@ public class Main {
     }
 
     public static File MakeDir(String file) throws URISyntaxException {
-        String temp = new File(Main.class.getProtectionDomain().getCodeSource().getLocation()
-                .toURI()).getPath();
-
+        String temp = Main.class.getProtectionDomain().getCodeSource().getLocation()
+                .toURI().getPath();
+        temp = temp.substring(0, temp.lastIndexOf('/'));
         temp = temp.substring(0, temp.lastIndexOf('/')) + "/" + file;
-        return new File(temp);
+        System.out.println(temp);
+
+
+        File input = new File(temp);
+        return input;
     }
 
 
