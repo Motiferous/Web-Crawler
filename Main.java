@@ -10,30 +10,28 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 public class Main {
-    static HashMap<String, String> configValues = new HashMap<>();
+    static HashMap<String, String> configValues = new HashMap<>();//We are using a hashmap to store the values of parameters.
 
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args){
 
+        ArrayList<Link> dataForAnalysis = new ArrayList<>();//An array of links.
 
-        ArrayList<Link> dataForAnalysis = new ArrayList<>();
-
-
-
-
+        //We are calling a function GetInput() to get input from our files.
         try {
             GetInput(dataForAnalysis);
-        } catch (FileNotFoundException | MalformedURLException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException | MalformedURLException  | URISyntaxException e) {
+            System.out.println("There was an error. Please check your files or/and URLs.");
         }
 
+        //We are calling a function GetResults() to get statistical data from our links.
         try {
             GetResults(dataForAnalysis);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        //We are writing the data to files with Output(.
         Output(dataForAnalysis);
-
 
     }
 
