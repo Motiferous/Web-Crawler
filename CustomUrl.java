@@ -1,8 +1,8 @@
 //This class is used for one url. It contains an url address in String and the deepness of it.
 public class CustomUrl {
 
-    private int deepness;//The deepness of this link.
-    private String url;//The url of this link.
+    private final int deepness;//The deepness of this link.
+    private final String url;//The url of this link.
 
     //Constructor.
     public CustomUrl(int deepness, String url) {

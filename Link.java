@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 //This class connects classes CustomUrl and Link.
 public class Link {
-    private ArrayList<CustomUrl> urls = new ArrayList<>();//Array of urls we are crawling trough.
-    private ArrayList<Word> words = new ArrayList<>();//Array of words we are searching for.
+    private final ArrayList<CustomUrl> urls = new ArrayList<>();//Array of urls we are crawling trough.
+    private final ArrayList<Word> words = new ArrayList<>();//Array of words we are searching for.
     private int totalCount = 0;//Sum of every word.
 
     //Function returns the sum of every word.

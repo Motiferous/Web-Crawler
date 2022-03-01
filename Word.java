@@ -2,7 +2,7 @@
 public class Word {
 
     private int counter;//Variable for the amount of times the word was found.
-    private String word;//The word we are searching for.
+    private final String word;//The word we are searching for.
 
     //Constructor.
     public Word(int counter, String word) {
